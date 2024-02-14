@@ -1,17 +1,17 @@
-use std::sync::mpsc::Receiver;
+use std::sync::mpsc::{Receiver, Sender};
 use robotics_lib::energy::Energy;
 use robotics_lib::event::events::Event;
 use robotics_lib::runner::{Robot, Runnable};
 use robotics_lib::runner::backpack::BackPack;
 use robotics_lib::world::coordinates::Coordinate;
 use robotics_lib::world::World;
+use crate::state::{Action, MyState};
 
-pub fn start_env(reciever:Receiver<i32>){
-    println!("{}",reciever.recv().unwrap());
-}
 
 struct MyRobot{
-
+    a_req_sender:Sender<u8>,
+    action_receiver:Receiver<Action>,
+    state_seder:Sender<MyState>
 }
 
 impl Runnable for MyRobot {
