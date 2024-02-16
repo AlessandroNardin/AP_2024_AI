@@ -18,7 +18,7 @@ pub struct MyRobot{
 }
 
 impl MyRobot{
-    pub fn new(a_req_sender:Sender<u8>, action_receiver:Rc<Receiver<Action>>, state_sender:Sender<MyState>) -> Self{
+    pub fn new(action_receiver:Rc<Receiver<Action>>, state_sender:Sender<MyState>) -> Self{
         let robot = Robot::new();
         MyRobot{
             robot,
@@ -26,6 +26,7 @@ impl MyRobot{
             state_sender,
         }
     }
+
 }
 
 impl Runnable for MyRobot {
@@ -45,7 +46,6 @@ impl Runnable for MyRobot {
     }
 
     fn handle_event(&mut self, event: Event) {
-        todo!()
     }
     fn get_energy(&self) -> &Energy {
         &self.robot.energy

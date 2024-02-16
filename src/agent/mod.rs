@@ -3,10 +3,9 @@ use rurel::mdp::{Agent, State};
 use crate::state::{Action, MyState};
 use crate::state::Action::{None, Up};
 
-struct MyAgent{
+pub struct MyAgent{
     current_state:MyState,
     control_sender:Sender<u8>,
-    a_req_reciver:Receiver<u8>,
     action_sender:Sender<Action>,
     state_reciever:Receiver<MyState>
 }
@@ -23,15 +22,26 @@ impl Agent<MyState> for MyAgent {
 }
 
 impl MyAgent{
-    fn new_gen(&mut self){
-        self.control_sender.send(1).unwrap();
-        self.a_req_reciver.recv().unwrap();
-        self.action_sender.send(None).unwrap();
-        self.current_state = self.state_reciever.recv().unwrap();
+    pub fn new(control_sender:Sender<u8>, action_sender:Sender<Action>, state_reciever:Receiver<MyState>) -> Self {
+        println!("INIZIO COSTRUZIONE AGENT");
+        let current_state = MyState::new(0.0f64.to_be_bytes(), vec![]);
+        let mut agent = MyAgent{
+            current_state,
+            control_sender,
+            action_sender,
+            state_reciever,
+        };
+        println!("AVVIO NUOVA GENERAZIONE");
+        agent.new_gen();
+        println!("NUOVA GEN PRONTA");
+        agent
     }
-
-    fn initialize_new_gen(&mut self){
-        self.control_sender.send(1).unwrap();
+    pub fn new_gen(&mut self){
+        println!("  Invio comando 2");
+        self.control_sender.send(2).unwrap();
+        println!("  Invio azione None");
+        self.action_sender.send(None).unwrap();
+        println!(" Attesa ricezione stato");
         self.current_state = self.state_reciever.recv().unwrap();
     }
 }
