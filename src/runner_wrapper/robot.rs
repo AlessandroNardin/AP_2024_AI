@@ -3,7 +3,7 @@ use std::sync::mpsc::{Receiver, Sender};
 use robotics_lib::energy::Energy;
 use robotics_lib::event::events::Event;
 use robotics_lib::interface::{get_score, go};
-use robotics_lib::interface::Direction::Up;
+use robotics_lib::interface::Direction::{Down, Up};
 use robotics_lib::runner::{Robot, Runnable};
 use robotics_lib::runner::backpack::BackPack;
 use robotics_lib::world::coordinates::Coordinate;
@@ -34,8 +34,8 @@ impl Runnable for MyRobot {
         let action = self.action_receiver.recv().unwrap();
         match action {
             Action::None => {}
-            Action::Up => {}
-            Action::Down => {}
+            Action::Up => {go(self,world,Up);}
+            Action::Down => {go(self,world,Down);}
             Action::Left => {}
             Action::Right => {}
         }

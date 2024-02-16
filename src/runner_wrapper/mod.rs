@@ -20,7 +20,6 @@ pub struct RunnerWrapper{
 
 impl RunnerWrapper {
     pub fn start(&mut self){
-        println!("WRAPPER AVVIATO");
         loop {
             let message = self.control_receiver.recv();
             match message {
@@ -37,7 +36,6 @@ impl RunnerWrapper {
     }
 
     fn init_new_gen(&mut self){
-        //qui carichi il mondo degli altri
         let mut generator = WorldGenerator::new();
         let robot = MyRobot::new(self.action_receiver.clone(),self.state_sender.clone());
 
@@ -48,7 +46,6 @@ impl RunnerWrapper {
     }
 
     pub fn new(control_receiver:Receiver<u8>, action_receiver:Rc<Receiver<Action>>, state_sender:Sender<MyState>) -> RunnerWrapper{
-        println!("INIZIO COSTRUZIONE WRAPPER");
         let robot = MyRobot::new(action_receiver.clone(),state_sender.clone());
         let mut generator = WorldGenerator::new();
         let runner = Runner::new(Box::new(robot),&mut generator).unwrap();

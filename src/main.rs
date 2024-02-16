@@ -7,7 +7,7 @@ use rurel::AgentTrainer;
 use rurel::mdp::Agent;
 use crate::agent::MyAgent;
 use crate::runner_wrapper::RunnerWrapper;
-use crate::state::Action::Up;
+use crate::state::Action::{Down, Up};
 
 pub(crate) mod agent;
 pub(crate) mod runner_wrapper;
@@ -22,5 +22,8 @@ fn main() {
         wrapper.start();
     });
     let mut agent = MyAgent::new(control_sender,action_sender,state_receiver);
-    agent.take_action(&Up);
+    loop {
+        agent.take_action(&Up);
+        agent.take_action(&Down);
+    }
 }
