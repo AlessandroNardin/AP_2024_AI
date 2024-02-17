@@ -1,11 +1,8 @@
-use std::cell::RefCell;
-use std::ops::Deref;
 use std::rc::Rc;
-use std::sync::mpsc::{Receiver, RecvError, Sender};
+use std::sync::mpsc::{Receiver, Sender};
 use robotics_lib::runner::Runner;
-use robotics_lib::world::world_generator::Generator;
+use robotics_lib::world::tile::Tile;
 use tyrannousarust_rex_world_generator::WorldGenerator;
-use log::error;
 use crate::runner_wrapper::robot::MyRobot;
 use crate::state::{Action, MyState};
 
@@ -36,18 +33,15 @@ impl RunnerWrapper {
     }
 
     fn init_new_gen(&mut self){
-        let mut generator = WorldGenerator::new();
-        let robot = MyRobot::new(self.action_receiver.clone(),self.state_sender.clone());
-
-        let robot2 = MyRobot::new(self.action_receiver.clone(),self.state_sender.clone());
+        let mut generator = WorldGenerator::new().set_size(100).set_seed(23456);
+        let robot = MyRobot::new(self.action_receiver.clone(),self.state_sender.clone(),100);
         self.runner = Runner::new(Box::new(robot),&mut generator).unwrap();
-        self.runner = Runner::new(Box::new(robot2),&mut generator).unwrap();
         self.runner.game_tick();
     }
 
     pub fn new(control_receiver:Receiver<u8>, action_receiver:Rc<Receiver<Action>>, state_sender:Sender<MyState>) -> RunnerWrapper{
-        let robot = MyRobot::new(action_receiver.clone(),state_sender.clone());
-        let mut generator = WorldGenerator::new();
+        let robot = MyRobot::new(action_receiver.clone(),state_sender.clone(),100);
+        let mut generator = WorldGenerator::new().set_size(100).set_seed(23456);
         let runner = Runner::new(Box::new(robot),&mut generator).unwrap();
         RunnerWrapper{
             runner,

@@ -1,7 +1,7 @@
 use std::sync::mpsc::{Receiver, Sender};
 use rurel::mdp::{Agent, State};
 use crate::state::{Action, MyState};
-use crate::state::Action::{None, Up};
+use crate::state::Action::{None};
 
 pub struct MyAgent{
     current_state:MyState,
@@ -17,7 +17,8 @@ impl Agent<MyState> for MyAgent {
     fn take_action(&mut self, action:&Action) {
         self.control_sender.send(1).unwrap();
         self.action_sender.send(action.clone()).unwrap();
-        self.current_state = self.state_reciever.recv().unwrap();
+        let new_state = self.state_reciever.recv().unwrap();
+        self.current_state = new_state;
     }
 }
 
@@ -36,6 +37,7 @@ impl MyAgent{
     pub fn new_gen(&mut self){
         self.control_sender.send(2).unwrap();
         self.action_sender.send(None).unwrap();
-        self.current_state = self.state_reciever.recv().unwrap();
+        let new_state = self.state_reciever.recv().unwrap();
+        self.current_state = new_state;
     }
 }

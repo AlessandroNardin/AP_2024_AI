@@ -1,12 +1,15 @@
 use rurel::mdp::State;
 
-#[derive(Clone,Eq, PartialEq,Hash)]
+#[derive(Clone,Eq, PartialEq,Hash,Debug)]
 pub enum Action{
     None,
     Up,
     Down,
     Left,
-    Right
+    Right,
+    Look,
+    Fish,
+    Sell,
 }
 #[derive(Eq, PartialEq, Clone, Hash)]
 pub struct MyState{
