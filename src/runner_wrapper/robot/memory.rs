@@ -1,10 +1,12 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 use image::{DynamicImage, GenericImage, Rgba};
 use robotics_lib::world::tile::{Tile, TileType};
+use robotics_lib::world::tile::TileType::ShallowWater;
 
 pub(crate) struct MyMemory{
     pub discovered_map:Vec<Vec<Option<Tile>>>,
     pub discovered_number:i32,
+    pub water_found:i32,
     pub world_size:usize,
 }
 
@@ -13,6 +15,7 @@ impl MyMemory {
         MyMemory{
             discovered_map:vec![vec![None;world_size];world_size],
             discovered_number:0,
+            water_found:0,
             world_size,
         }
     }
@@ -43,7 +46,9 @@ impl MyMemory {
             for (j, is_valid) in row.iter().enumerate() {
                 if *is_valid {
                     if let None = self.discovered_map[c_row+i-1][c_col+j-1]{
-                        self.discovered_map[c_row+i-1][c_col+j-1] = Some(view[i][j].clone().unwrap());
+                        let tile = view[i][j].clone().unwrap();
+                        if tile.tile_type == ShallowWater {self.water_found += 1}
+                        self.discovered_map[c_row+i-1][c_col+j-1] = Some(tile);
                         self.discovered_number += 1;
                     }
 

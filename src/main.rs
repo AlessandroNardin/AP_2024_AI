@@ -13,8 +13,11 @@ pub(crate) mod agent;
 pub(crate) mod runner_wrapper;
 pub(crate) mod state;
 
-const GENERATIONS:u32 = 10;
-const ITERATIONS_PER_GEN:u32 = 100;
+const GENERATIONS:u32 = 1000;
+const ITERATIONS_PER_GEN:u32 = 1000;
+
+
+static mut print_image:bool = false;
 
 fn main() {
     let (control_sender,control_receiver) = mpsc::channel();
@@ -26,19 +29,20 @@ fn main() {
     });
     let mut agent = MyAgent::new(control_sender,action_sender,state_receiver);
     let mut trainer = AgentTrainer::new();
-
     println!("Training Started");
     for GENERATION in 0..GENERATIONS {
         agent.new_gen();
         println!("Training gen {GENERATION}");
         trainer.train(&mut agent,
-                      &QLearning::new(0.2, 0.01, 2.),
+                      &QLearning::new(0.2, 0.1, 0.),
                       &mut FixedIterations::new(ITERATIONS_PER_GEN),
                       &RandomExploration::new());
     }
+    unsafe { print_image = true; }
     agent.new_gen();
-    for i in 0..100 {
+    for i in 0..600 {
         let a = trainer.best_action(agent.current_state());
+        println!("state val:{}",agent.current_state().reward());
         match a {
             None => { println!("Best action not available");}
             Some(action) => {
