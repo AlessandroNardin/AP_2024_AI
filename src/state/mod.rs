@@ -14,15 +14,19 @@ pub enum Action{
 #[derive(Eq, PartialEq, Clone, Hash)]
 pub struct MyState{
     reward: [u8;8],
-    actions:Vec<<MyState as State>::A>
+    actions:Vec<<MyState as State>::A>,
+    row:usize,
+    col:usize,
 }
 
 
 impl MyState {
-    pub fn new(reward:[u8;8], actions:Vec<<MyState as State>::A>) -> Self {
+    pub fn new(reward:[u8;8], actions:Vec<<MyState as State>::A>, row:usize, col:usize) -> Self {
         MyState{
             reward,
-            actions
+            actions,
+            row,
+            col
         }
     }
 }

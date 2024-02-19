@@ -1,6 +1,8 @@
 use std::rc::Rc;
 use std::sync::mpsc;
 use std::thread;
+use std::thread::sleep;
+use std::time::Duration;
 use rurel::AgentTrainer;
 use rurel::mdp::{Agent, State};
 use rurel::strategy::explore::RandomExploration;
@@ -15,6 +17,7 @@ pub(crate) mod state;
 
 const GENERATIONS:u32 = 1000;
 const ITERATIONS_PER_GEN:u32 = 1000;
+const DEBUG:bool = false;
 
 
 static mut print_image:bool = false;
@@ -40,14 +43,14 @@ fn main() {
     }
     unsafe { print_image = true; }
     agent.new_gen();
-    for i in 0..600 {
+    for i in 0..200 {
         let a = trainer.best_action(agent.current_state());
-        println!("state val:{}",agent.current_state().reward());
         match a {
-            None => { println!("Best action not available");}
+            None => { println!("Best action not available");break}
             Some(action) => {
                 println!("Action {i}: {:?}",action);
                 agent.take_action(&action);
+                sleep(Duration::from_millis(100));
             }
         }
     }

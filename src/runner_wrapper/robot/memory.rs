@@ -1,13 +1,15 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 use image::{DynamicImage, GenericImage, Rgba};
 use robotics_lib::world::tile::{Tile, TileType};
+use robotics_lib::world::tile::Content::Market;
 use robotics_lib::world::tile::TileType::ShallowWater;
 
 pub(crate) struct MyMemory{
     pub discovered_map:Vec<Vec<Option<Tile>>>,
     pub discovered_number:i32,
-    pub water_found:i32,
     pub world_size:usize,
+    pub water_found:bool,
+    pub market_found:bool,
 }
 
 impl MyMemory {
@@ -15,12 +17,13 @@ impl MyMemory {
         MyMemory{
             discovered_map:vec![vec![None;world_size];world_size],
             discovered_number:0,
-            water_found:0,
             world_size,
+            water_found:false,
+            market_found:false,
         }
     }
 
-    pub(crate) fn discover_view(&mut self, view:Vec<Vec<Option<Tile>>>, c_row:usize, c_col:usize){
+    pub(crate) fn discover_view(&mut self, view:&Vec<Vec<Option<Tile>>>, c_row:usize, c_col:usize){
         let mut valid_cells = vec![vec![true;3];3];
         if c_row == 0 {
             valid_cells[0][0] = false;
@@ -47,9 +50,11 @@ impl MyMemory {
                 if *is_valid {
                     if let None = self.discovered_map[c_row+i-1][c_col+j-1]{
                         let tile = view[i][j].clone().unwrap();
-                        if tile.tile_type == ShallowWater {self.water_found += 1}
+                        if tile.tile_type == ShallowWater { self.water_found = true; }
+                        if let Market(_) = tile.content {self.market_found = true; }
                         self.discovered_map[c_row+i-1][c_col+j-1] = Some(tile);
                         self.discovered_number += 1;
+
                     }
 
                 }

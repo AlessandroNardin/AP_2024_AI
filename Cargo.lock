@@ -17,6 +17,7 @@ dependencies = [
  "log",
  "robotics_lib",
  "rurel",
+ "swift_seller",
  "tyrannousarust-rex-world-generator",
 ]
 
@@ -821,6 +822,15 @@ dependencies = [
  "quote",
  "rustversion",
  "syn 2.0.49",
+]
+
+[[package]]
+name = "swift_seller"
+version = "0.1.3"
+source = "sparse+https://advancedprogramming.disi.unitn.it/api/v1/crates/"
+checksum = "9baecc24e4dfe5d319e7a69111605a61935b5d413402ad2de8d637afa5d44318"
+dependencies = [
+ "robotics_lib",
 ]
 
 [[package]]
