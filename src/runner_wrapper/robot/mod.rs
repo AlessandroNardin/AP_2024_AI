@@ -117,7 +117,7 @@ impl Runnable for MyRobot {
         let coin_now = max(0,coin as i32 - self.last_coin as i32) as usize;
         self.last_coin = coin;
 
-        let mut reward = disc_now + 2 * fish_now as i32 + 4 * coin as i32;
+        let mut reward = 2 * fish_now as i32 + 3 * coin_now as i32;
 
         if self.water_found != self.memory.water_found { reward += 100; }
         if self.market_found != self.memory.market_found { reward += 100; }
@@ -131,7 +131,7 @@ impl Runnable for MyRobot {
         if let Ok(()) = go_allowed(self,world,&Down) { if Action::Down != self.last_action {action_vector.push(Action::Down)} }
         if let Ok(()) = go_allowed(self,world,&Left) { if Action::Left != self.last_action {action_vector.push(Action::Left)} }
         if let Ok(()) = go_allowed(self,world,&Right) { if Action::Right != self.last_action {action_vector.push(Action::Right)} }
-        if near_fish(&view) { action_vector.push(Action::Fish)}
+        if near_fish(&view) {action_vector.push(Action::Fish)}
         if near_market(&view) {action_vector.push(Action::Sell)}
 
         //GENERATE AND SEND STATE
@@ -139,13 +139,14 @@ impl Runnable for MyRobot {
         let col = self.robot.coordinate.get_col();
 
         let reward_bytes = f64::to_be_bytes(reward as f64);
-        let new_state = MyState::new(reward_bytes,action_vector,row,col);
+        let new_state = MyState::new(reward_bytes,action_vector,row,col,fish>0);
         self.state_sender.send(new_state).unwrap();
         unsafe {
             if print_image {
                 self.memory.gen_img();
-                println!("{fish}-{coin}");
+                println!("{fish}\t{coin}");
             }
+
         }
 
     }

@@ -24,7 +24,7 @@ impl Agent<MyState> for MyAgent {
 
 impl MyAgent{
     pub fn new(control_sender:Sender<u8>, action_sender:Sender<Action>, state_reciever:Receiver<MyState>) -> Self {
-        let current_state = MyState::new(0.0f64.to_be_bytes(), vec![],0,0);
+        let current_state = MyState::new(0.0f64.to_be_bytes(), vec![],0,0,false);
         let mut agent = MyAgent{
             current_state,
             control_sender,

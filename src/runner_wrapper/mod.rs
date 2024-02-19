@@ -41,6 +41,8 @@ impl RunnerWrapper {
             .set_natural_size(0.9)
             .set_artificial_density(0.0)
             .set_natural_density(0.7);
+
+
         let robot = MyRobot::new(self.action_receiver.clone(),self.state_sender.clone(),30);
         self.runner = Runner::new(Box::new(robot),&mut generator).unwrap();
         self.runner.game_tick();
@@ -56,6 +58,8 @@ impl RunnerWrapper {
             .set_natural_size(0.9)
             .set_artificial_density(0.0)
             .set_natural_density(0.7);
+
+
         let runner = Runner::new(Box::new(robot),&mut generator).unwrap();
         RunnerWrapper{
             runner,

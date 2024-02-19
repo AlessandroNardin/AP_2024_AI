@@ -16,7 +16,7 @@ pub(crate) mod runner_wrapper;
 pub(crate) mod state;
 
 const GENERATIONS:u32 = 1000;
-const ITERATIONS_PER_GEN:u32 = 1000;
+const ITERATIONS_PER_GEN:u32 = 500;
 const DEBUG:bool = false;
 
 
@@ -37,7 +37,7 @@ fn main() {
         agent.new_gen();
         println!("Training gen {GENERATION}");
         trainer.train(&mut agent,
-                      &QLearning::new(0.2, 0.1, 0.),
+                      &QLearning::new(0.2, 0.2, 0.),
                       &mut FixedIterations::new(ITERATIONS_PER_GEN),
                       &RandomExploration::new());
     }
